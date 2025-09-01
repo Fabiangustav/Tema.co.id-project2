@@ -2,17 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Berita extends Model
 {
-    use HasFactory;
-
-    protected $table = 'beritas'; // default sesuai migration
-
     protected $fillable = [
-        'judul',
-        'isi',
+        'title',
+        'slug',
+        'content',
+        'image',
+        'status',
+        'published_at'
     ];
 }

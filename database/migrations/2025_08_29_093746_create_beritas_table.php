@@ -10,8 +10,12 @@ return new class extends Migration
     {
         Schema::create('beritas', function (Blueprint $table) {
             $table->id();
-            $table->string('judul');
-            $table->text('isi');
+            $table->string('title');
+            $table->string('slug')->unique();
+            $table->text('content');
+            $table->string('image')->nullable();
+            $table->enum('status', ['draft', 'published'])->default('draft');
+            $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });
     }

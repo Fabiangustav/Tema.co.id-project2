@@ -2,49 +2,61 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\Admin\BeritaController;
-use App\Http\Controllers\Admin\BlogController;
-use App\Http\Controllers\Admin\SliderController;
-use App\Http\Controllers\Admin\KontakController;
+use App\Http\Controllers\RegionsController;
+use App\Http\Controllers\Admin\{
+    DashboardController,
+    BeritaController, 
+    BlogController,
+    SliderController,
+    UserController,
+    SettingController,
+    AboutController,
+    AuthController,
+    KontakController
+};
 
-// Halaman statis
-Route::get('/', function () {
-    return view('home');
-})->name('welcome');
+// Frontend Routes
+Route::get('/', function () { 
+    return view('home'); 
+})->name('home');
 
-Route::get('/home', function () {
-    return view('home');
+Route::get('/404', function () { 
+    return view('404'); 
 });
 
-
-Route::get('/404', function () {
-    return view('404');
+Route::get('/portofolio-details', function () { 
+    return view('portofolio-details'); 
 });
 
-Route::get('/portofolio-details', function () {
-    return view('portofolio-details');
-});
-
-// Halaman contact (dynamic pakai controller)
-Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+// Contact Routes (Public)
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.show');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
-// Kalau kamu butuh versi dynamic pakai parameter
-Route::get('/contact/{region}/{city?}', [ContactController::class, 'show'])->name('contact.show');
+// Public Resources (jika diperlukan)
+Route::resource('regions', RegionsController::class);
 
-// Group Admin
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
-
+// Admin Routes
+Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+    
+    // Admin Auth Routes
+    Route::get('login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('login', [AuthController::class, 'login'])->name('login.submit');
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    
+    // Dashboard (setelah login)
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Content Management Resources
     Route::resource('berita', BeritaController::class);
     Route::resource('blog', BlogController::class);
-    Route::resource('sliders', SliderController::class);
+    Route::resource('users', UserController::class);
     Route::resource('kontak', KontakController::class);
-
-    // About
-    Route::get('/about/edit', [App\Http\Controllers\Admin\AboutController::class, 'edit'])->name('about.edit');
-    Route::post('/about/update', [App\Http\Controllers\Admin\AboutController::class, 'update'])->name('about.update');
+    
+    // About Management
+    Route::get('about/edit', [AboutController::class, 'edit'])->name('about.edit');
+    Route::put('about/update', [AboutController::class, 'update'])->name('about.update');
+    
+    // Settings Management
+    Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::put('settings/update', [SettingController::class, 'update'])->name('settings.update');
 });
-

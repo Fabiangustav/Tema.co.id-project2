@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Berita;
+use Illuminate\Http\Request;
 
 class BeritaController extends Controller
 {
     public function index()
     {
-        $berita = Berita::latest()->paginate(10);
-        return view('admin.berita.index', compact('berita'));
+        $beritas = Berita::latest()->paginate(10);
+        return view('admin.berita.index', compact('beritas'));
     }
 
     public function create()
@@ -21,35 +21,17 @@ class BeritaController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'judul' => 'required',
-            'isi'   => 'required',
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'status' => 'required|in:draft,published'
         ]);
 
-        Berita::create($request->all());
-        return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil ditambahkan');
-    }
+        Berita::create($validated);
 
-    public function edit(Berita $beritum)
-    {
-        return view('admin.berita.edit', compact('beritum'));
-    }
-
-    public function update(Request $request, Berita $beritum)
-    {
-        $request->validate([
-            'judul' => 'required',
-            'isi'   => 'required',
-        ]);
-
-        $beritum->update($request->all());
-        return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil diperbarui');
-    }
-
-    public function destroy(Berita $beritum)
-    {
-        $beritum->delete();
-        return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil dihapus');
+        return redirect()->route('admin.berita.index')
+            ->with('success', 'Berita created successfully');
     }
 }
 

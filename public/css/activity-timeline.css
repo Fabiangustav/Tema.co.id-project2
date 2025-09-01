@@ -1,0 +1,292 @@
+/* public/assets/admin/css/activity-timeline.css */
+
+/* Activity Timeline */
+.activity-timeline {
+    position: relative;
+    padding-left: 20px;
+}
+
+.activity-timeline::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border-radius: 1px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideInActivity 0.6s ease-out forwards;
+}
+
+.activity-item:nth-child(1) { animation-delay: 0.1s; }
+.activity-item:nth-child(2) { animation-delay: 0.2s; }
+.activity-item:nth-child(3) { animation-delay: 0.3s; }
+.activity-item:nth-child(4) { animation-delay: 0.4s; }
+.activity-item:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes slideInActivity {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.activity-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 15px;
+    margin: -15px -15px 10px -15px;
+    transform: translateX(5px);
+}
+
+.activity-item:hover:last-child {
+    margin-bottom: -15px;
+}
+
+.activity-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    font-size: 1.1rem;
+    color: white;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.activity-icon::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.activity-item:hover .activity-icon::before {
+    opacity: 1;
+}
+
+.activity-item:hover .activity-icon {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.activity-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.activity-content h6 {
+    margin-bottom: 8px;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.3;
+    transition: color 0.3s ease;
+}
+
+.activity-item:hover .activity-content h6 {
+    color: #e2e8f0;
+}
+
+.activity-content p {
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: #94a3b8;
+    transition: color 0.3s ease;
+}
+
+.activity-item:hover .activity-content p {
+    color: #cbd5e1;
+}
+
+.activity-content small {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.activity-item:hover .activity-content small {
+    color: #94a3b8;
+}
+
+/* Activity types with specific styling */
+.activity-item[data-activity-type="create"] .activity-icon {
+    background: linear-gradient(135deg, #10b981, #065f46);
+}
+
+.activity-item[data-activity-type="update"] .activity-icon {
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+}
+
+.activity-item[data-activity-type="delete"] .activity-icon {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+}
+
+.activity-item[data-activity-type="info"] .activity-icon {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+}
+
+/* Loading more activities */
+#loadMoreActivities {
+    transition: all 0.3s ease;
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+#loadMoreActivities::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+#loadMoreActivities:hover::before {
+    left: 100%;
+}
+
+#loadMoreActivities:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+#loadMoreActivities.loading {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+#loadMoreActivities.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Refresh button */
+#refreshActivityBtn {
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#refreshActivityBtn:hover {
+    transform: rotate(180deg);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#refreshActivityBtn.refreshing {
+    animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Empty state */
+.activity-timeline.empty {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.activity-timeline.empty::before {
+    display: none;
+}
+
+.empty-state-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #64748b;
+}
+
+.empty-state-message {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .activity-timeline {
+        padding-left: 15px;
+    }
+    
+    .activity-timeline::before {
+        left: 15px;
+    }
+    
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        margin-right: 15px;
+        font-size: 1rem;
+    }
+    
+    .activity-content h6 {
+        font-size: 0.9rem;
+    }
+    
+    .activity-content p {
+        font-size: 0.8rem;
+    }
+    
+    .activity-item:hover {
+        padding: 10px;
+        margin: -10px -10px 15px -10px;
+    }
+}
