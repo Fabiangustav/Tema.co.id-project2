@@ -4261,7 +4261,7 @@ body{
 }
 
 /* ACTIVE/CURRENT STATE - INI YANG PENTING UNTUK BIRU */
-.nav.menu > li > a.current {
+.nav.menu > li > a.active {
     color: #007bff !important;
     font-weight: 600;
 }
@@ -4377,21 +4377,119 @@ section[id] {
 
 
 .preloader {
-  position: fixed;        /* tempel penuh di layar */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;          /* tinggi penuh layar */
-  background: #1976d2;    /* warna background (biru di contohmu) */
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #fff;
+  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 99999;         /* lebih tinggi dari semua elemen lain */
-  transition: opacity 0.5s ease, visibility 0.5s ease;
+  transition: opacity 1s ease, visibility 1s ease; /* Biar halus */
 }
+
+.preloader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
 
 .preloader-deactivate {
   opacity: 0;
   visibility: hidden;
 }
 
+
+
+.nav.menu {
+  position: relative;
+}
+
+.navbar-nav {
+  position: relative;
+}
+
+/* Garis indicator */
+.nav-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background: #007bff;
+    transition: left 0.3s ease, width 0.3s ease;
+}
+
+.nav-link.active {
+    color: #007bff !important;
+    position: relative;
+}
+
+.nav-link.active::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #007bff;
+}
+
+
+
+.nav.menu { position: relative; }
+.nav-indicator{
+  position:absolute; bottom:0; left:0; height:3px; width:0;
+  background:#0d6efd; border-radius:2px; transition:all .25s ease;
+}
+.nav-link.active{ color:#0d6efd !important; font-weight:600; }
+
+
+.navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px; /* jarak garis bawah */
+    width: 0;
+    height: 2px;
+    background: #007bff; /* warna garis */
+    transition: width 0.3s ease; /* animasi lebar */
+}
+
+.navbar-nav .nav-link.active::after,
+.navbar-nav .nav-link:hover::after {
+    width: 100%; /* animasi jalan mulus */
+}
+
+
+scroll-behavior: smooth;
+
+
+
+/* Menu link biasa */
+.header .nav li a {
+  position: relative;
+  color: #333;
+  transition: color 0.3s ease; /* biar warnanya smooth */
+}
+
+/* Efek garis bawah/animasi biru */
+.header .nav li a::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: #007bff; /* warna biru highlight */
+  transition: width 0.4s ease; /* animasi smooth */
+}
+
+/* Kalau active, garis bawah muncul */
+.header .nav li a.active::after {
+  width: 100%;
+}
+
+/* Warna text juga smooth */
+.header .nav li a.active {
+  color: #007bff;
+}

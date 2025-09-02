@@ -25,7 +25,12 @@
     <link rel="stylesheet" href="{{ asset('style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
 </head>
-<body>
+
+<body data-bs-spy="scroll" data-bs-target="#navbar" data-bs-offset="100" tabindex="0">
+
+    <!-- Preloader -->
+    <x-preloader />
+    <!-- End Preloader -->
 
     {{-- Header --}}
     <x-header></x-header>
@@ -58,7 +63,10 @@
     <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
     <script src="{{ asset('js/gmaps.min.js') }}"></script>
     <script src="{{ asset('js/map-active.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+
+    <!-- Jangan load bootstrap 2x, cukup bundle dari CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="{{ asset('js/main.js') }}"></script>
 </body>
 </html>

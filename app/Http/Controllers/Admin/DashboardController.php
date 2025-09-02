@@ -37,22 +37,22 @@ class DashboardController extends Controller
             'totalBlog' => Blog::count(),
             'totalSlider' => Slider::count(),
             'totalMessages' => Contact::count(),
-            
+
             // Content Status
             'publishedBerita' => Berita::where('status', 'published')->count(),
             'draftBlog' => Blog::where('status', 'draft')->count(),
             'newMessages' => Contact::where('is_read', false)->count(),
-            
+
             // Recent Activities
             'recentActivities' => $this->getRecentActivities(),
-            
+
             // Analytics
             'monthlyStats' => $this->getMonthlyStats(),
         ];
 
-    
+
     }
-    
+
 
     private function getRecentActivities($limit = 5)
     {

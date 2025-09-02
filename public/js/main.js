@@ -344,101 +344,160 @@ Version:	1.1
 
 
 
-// Simple working spy scroll and dropdown
-document.addEventListener('DOMContentLoaded', function() {
 
-    // 1. DROPDOWN FUNCTIONALITY
-    const dropdowns = document.querySelectorAll('.has-dropdown');
 
-    dropdowns.forEach(dropdown => {
-        const link = dropdown.querySelector('a');
-        const submenu = dropdown.querySelector('.sub-menu');
 
-        // Toggle dropdown on click
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
 
-            // Close other dropdowns
-            dropdowns.forEach(otherDropdown => {
-                if (otherDropdown !== dropdown) {
-                    otherDropdown.classList.remove('open');
-                }
-            });
 
-            // Toggle current dropdown
-            dropdown.classList.toggle('open');
-        });
+
+
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const header = document.querySelector(".header");
+  const nav    = document.querySelector(".nav.menu");
+  if (!nav) return;
+
+  const indicator = nav.querySelector(".nav-indicator");
+  const links     = Array.from(nav.querySelectorAll(".nav-link"));
+
+  // Helper: ambil hash dari href absolut/relatif
+  const getHash = (a) => {
+    try { return new URL(a.getAttribute("href"), location.href).hash || ""; }
+    catch { return ""; }
+  };
+
+  // Helper: set active + geser indikator
+  function setActive(link){
+    links.forEach(l => l.classList.remove("active"));
+    if (link) {
+      link.classList.add("active");
+      moveIndicator(link);
+    }
+  }
+  function moveIndicator(link){
+    if (!indicator || !link) return;
+    indicator.style.width = link.offsetWidth + "px";
+    indicator.style.left  = link.offsetLeft + "px";
+  }
+
+  // Smooth scroll
+  links.forEach(a => {
+    a.addEventListener("click", (e) => {
+      const hash = getHash(a);
+      const target = hash && document.querySelector(hash);
+      const samePage = a.origin === location.origin && a.pathname === location.pathname;
+
+      if (samePage && target) {
+  e.preventDefault();
+  const offset = (header?.offsetHeight || 0) + 20;
+  const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+
+  // Ganti ini:
+  // window.scrollTo({ top, behavior: "smooth" });
+
+  // Jadi pakai custom:
+  smoothScrollTo(top, 1500); // 1500ms = 1.5 detik
+  setActive(a);
+}
+
     });
+  });
 
-    // Close dropdowns when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.has-dropdown')) {
-            dropdowns.forEach(dropdown => {
-                dropdown.classList.remove('open');
-            });
-        }
-    });
+  // ScrollSpy
+  function updateActiveOnScroll(){
+    const offset = (header?.offsetHeight || 0) + 30;
+    let activated = false;
 
-    // 2. SPY SCROLL FUNCTIONALITY
-    function updateActiveLink() {
-        const scrollLinks = document.querySelectorAll('.scroll-link');
-        const sections = document.querySelectorAll('section[id]');
-        const scrollPos = window.scrollY + 150; // offset
+    for (const a of links) {
+      const hash = getHash(a);
+      if (!hash) continue;
+      const sec = document.querySelector(hash);
+      if (!sec) continue;
 
-        // Remove active from all links first
-        scrollLinks.forEach(link => {
-            link.classList.remove('current');
-        });
+      const top = sec.offsetTop;
+      const bottom = top + sec.offsetHeight;
+      const y = window.scrollY + offset;
 
-        // Find current section and add active class
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-            const sectionId = section.getAttribute('id');
-
-            if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
-                const activeLink = document.querySelector(`.scroll-link[href="#${sectionId}"]`);
-                if (activeLink) {
-                    activeLink.classList.add('current');
-                }
-            }
-        });
+      if (y >= top - 50 && y < bottom - 50) {
+        setActive(a);
+        activated = true;
+        break;
+      }
     }
 
-    // 3. SMOOTH SCROLL
-    const scrollLinks = document.querySelectorAll('.scroll-link');
-    scrollLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
+    if (!activated && window.scrollY < 60) {
+      const tema = links.find(l => getHash(l) === "#tema" || l.dataset.section === "tema");
+      if (tema) setActive(tema);
+    }
+  }
 
-            const targetId = this.getAttribute('href').substring(1);
-            const targetSection = document.getElementById(targetId);
+  // Init
+  const anyActive = nav.querySelector(".nav-link.active");
+  if (anyActive) moveIndicator(anyActive);
 
-            if (targetSection) {
-                const headerHeight = document.querySelector('.header').offsetHeight;
-                const targetPos = targetSection.offsetTop - headerHeight - 20;
+  const onHome = !!document.querySelector("#tema");
+  if (onHome) {
+    if (location.hash && document.querySelector(location.hash)) {
 
-                window.scrollTo({
-                    top: targetPos,
-                    behavior: 'smooth'
-                });
-            }
+      setTimeout(() => {
+  const target = document.querySelector(location.hash);
+  if (target) {
+    const offset = (header?.offsetHeight || 0) + 20;
+    const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+    smoothScrollTo(top, 1500);
+  }
+}, 150);
+
+    } else {
+      const tema = links.find(l => getHash(l) === "#tema" || l.dataset.section === "tema");
+      if (tema) setActive(tema);
+    }
+
+    // 🔥 Perbaikan: taruh ticking scroll di sini
+    let ticking = false;
+    window.addEventListener("scroll", () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateActiveOnScroll();
+          ticking = false;
         });
-    });
+        ticking = true;
+      }
+    }, { passive: true });
 
-    // 4. FIXED HEADER
-    const header = document.querySelector('.header');
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 100) {
-            header.classList.add('header-fixed');
-        } else {
-            header.classList.remove('header-fixed');
-        }
-
-        // Update spy scroll
-        updateActiveLink();
-    });
-
-    // Initialize spy scroll
-    updateActiveLink();
+    window.addEventListener("resize", () => moveIndicator(nav.querySelector(".nav-link.active")));
+    updateActiveOnScroll();
+  }
 });
+
+
+// Fungsi custom smooth scroll
+function smoothScrollTo(targetY, duration = 1200) {
+  const startY = window.pageYOffset;
+  const diff = targetY - startY;
+  let startTime;
+
+  function step(timestamp) {
+    if (!startTime) startTime = timestamp;
+    const time = timestamp - startTime;
+    const percent = Math.min(time / duration, 1);
+
+    // easing (easeInOutCubic biar smooth)
+    const ease = percent < 0.5
+      ? 4 * percent * percent * percent
+      : 1 - Math.pow(-2 * percent + 2, 3) / 2;
+
+    window.scrollTo(0, startY + diff * ease);
+
+    if (time < duration) {
+      requestAnimationFrame(step);
+    }
+  }
+
+  requestAnimationFrame(step);
+}

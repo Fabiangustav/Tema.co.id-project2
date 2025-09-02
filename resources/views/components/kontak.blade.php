@@ -1,4 +1,4 @@
-<section class="appointment" id="kontak" class="kontak">
+<section class="appointment" id="kontak">
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12">

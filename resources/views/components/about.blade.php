@@ -1,5 +1,6 @@
-<section class="Feautes section" id="about" class="about">
-			<div class="container">
+<section class="Feautes section py-5" id="about">
+
+			<div class="container mt-5">
 				<div class="row">
 					<div class="col-lg-12">
 						<div class="section-title">
