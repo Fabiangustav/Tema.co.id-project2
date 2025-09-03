@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\RegionsController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\{
     DashboardController,
     BeritaController,
@@ -12,7 +13,7 @@ use App\Http\Controllers\Admin\{
     SettingController,
     AboutController,
     AuthController,
-    KontakController
+    KontakController,
 };
 
 // ====================
@@ -45,27 +46,24 @@ Route::resource('regions', RegionsController::class);
 // ====================
 // Admin Routes
 // ====================
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+Route::prefix('admin')->name('admin.')->group(function () {
 
-    // Admin Auth Routes
-    Route::get('login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('login', [AuthController::class, 'login'])->name('login.submit');
-    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    // Auth
+    Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [LoginController::class, 'login'])->name('login.post');
+    Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
-    // Dashboard (setelah login)
+    // Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Content Management Resources
+    // Content Management
     Route::resource('berita', BeritaController::class);
     Route::resource('blog', BlogController::class);
     Route::resource('users', UserController::class);
     Route::resource('kontak', KontakController::class);
+    Route::resource('regions', RegionsController::class);
 
-    // About Management
-    Route::get('about/edit', [AboutController::class, 'edit'])->name('about.edit');
-    Route::put('about/update', [AboutController::class, 'update'])->name('about.update');
-
-    // Settings Management
+    // Settings
     Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
     Route::put('settings/update', [SettingController::class, 'update'])->name('settings.update');
 });

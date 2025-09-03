@@ -9,6 +9,8 @@
             </div>
             <div class="card-body">
                 <div class="row g-4" id="contentOverviewContainer">
+                    
+                    {{-- ==================== BERITA ==================== --}}
                     <div class="col-lg-3 col-md-6">
                         <div class="overview-card" data-module="berita">
                             <div class="overview-icon bg-primary">
@@ -41,6 +43,7 @@
                         </div>
                     </div>
 
+                    {{-- ==================== BLOG ==================== --}}
                     <div class="col-lg-3 col-md-6">
                         <div class="overview-card" data-module="blog">
                             <div class="overview-icon bg-success">
@@ -56,14 +59,14 @@
                             </div>
                             <div class="overview-actions">
                                 <div class="btn-group w-100">
-                                    <a href="{{ route('blog.index') }}" class="btn btn-sm btn-outline-success">Manage</a>
+                                    <a href="{{ route('admin.blog.index') }}" class="btn btn-sm btn-outline-success">Manage</a>
                                     <button type="button" class="btn btn-sm btn-outline-success dropdown-toggle dropdown-toggle-split" 
                                             data-bs-toggle="dropdown">
                                         <span class="visually-hidden">Toggle Dropdown</span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{{ route('blog.index') }}">Add New</a></li>
-                                        <li><a class="dropdown-item" href="{{ route('blog.index', ['status' => 'draft']) }}">Drafts</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('admin.blog.index') }}">Add New</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('admin.blog.index', ['status' => 'draft']) }}">Drafts</a></li>
                                         <li><hr class="dropdown-divider"></li>
                                         <li><a class="dropdown-item" href="#">Categories</a></li>
                                     </ul>
@@ -72,6 +75,7 @@
                         </div>
                     </div>
 
+                    {{-- ==================== ABOUT & CONTACT ==================== --}}
                     <div class="col-lg-3 col-md-6">
                         <div class="overview-card" data-module="about-contact">
                             <div class="overview-icon bg-warning">
@@ -87,14 +91,14 @@
                             </div>
                             <div class="overview-actions">
                                 <div class="btn-group w-100">
-                                    <a href="{{ route('about.edit') }}" class="btn btn-sm btn-outline-warning">Edit</a>
+                                    {{-- ✅ Perbaikan: tambahkan parameter $about --}}
+            
                                     <button type="button" class="btn btn-sm btn-outline-warning dropdown-toggle dropdown-toggle-split" 
                                             data-bs-toggle="dropdown">
                                         <span class="visually-hidden">Toggle Dropdown</span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{{ route('about.edit') }}">Edit About</a></li>
-                                        <li><a class="dropdown-item" href="{{ route('kontak.index') }}">Messages</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('admin.kontak.index') }}">Messages</a></li>
                                         <li><hr class="dropdown-divider"></li>
                                         <li><a class="dropdown-item" href="#">Settings</a></li>
                                     </ul>
@@ -103,6 +107,7 @@
                         </div>
                     </div>
 
+                    {{-- ==================== REGIONS ==================== --}}
                     <div class="col-lg-3 col-md-6">
                         <div class="overview-card" data-module="regions">
                             <div class="overview-icon bg-info">
@@ -114,27 +119,4 @@
                                 <div class="overview-stats">
                                     <span class="badge bg-info">{{ $totalRegions }} Regions</span>
                                     <span class="badge bg-success">{{ $activeRegions }} Active</span>
-                                </div>
-                            </div>
-                            <div class="overview-actions">
-                                <div class="btn-group w-100">
-                                    <a href="{{ route('regions.index') }}" class="btn btn-sm btn-outline-info">Manage</a>
-                                    <button type="button" class="btn btn-sm btn-outline-info dropdown-toggle dropdown-toggle-split" 
-                                            data-bs-toggle="dropdown">
-                                        <span class="visually-hidden">Toggle Dropdown</span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{{ route('regions.create') }}">Add Region</a></li>
-                                        <li><a class="dropdown-item" href="{{ route('regions.index', ['status' => 'inactive']) }}">Inactive</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="#">Analytics</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                                </

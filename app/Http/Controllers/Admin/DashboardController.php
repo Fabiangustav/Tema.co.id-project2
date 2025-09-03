@@ -33,26 +33,23 @@ class DashboardController extends Controller
     {
         return [
             // Basic statistics
-            'totalBerita' => Berita::count(),
-            'totalBlog' => Blog::count(),
-            'totalSlider' => Slider::count(),
-            'totalMessages' => Contact::count(),
+            'totalBerita'     => Berita::count(),
+            'totalBlog'       => Blog::count(),
+            'totalSlider'     => Slider::count(),
+            'totalMessages'   => Contact::count(),
 
             // Content Status
             'publishedBerita' => Berita::where('status', 'published')->count(),
-            'draftBlog' => Blog::where('status', 'draft')->count(),
-            'newMessages' => Contact::where('is_read', false)->count(),
+            'draftBlog'       => Blog::where('status', 'draft')->count(),
+            'newMessages'     => Contact::where('is_read', false)->count(),
 
             // Recent Activities
             'recentActivities' => $this->getRecentActivities(),
 
             // Analytics
-            'monthlyStats' => $this->getMonthlyStats(),
+            'monthlyStats'    => $this->getMonthlyStats(),
         ];
-
-
     }
-
 
     private function getRecentActivities($limit = 5)
     {
@@ -91,15 +88,15 @@ class DashboardController extends Controller
 
         return [
             'berita' => [
-                'current' => Berita::where('created_at', '>=', $currentMonth)->count(),
+                'current'  => Berita::where('created_at', '>=', $currentMonth)->count(),
                 'previous' => Berita::whereBetween('created_at', [$lastMonth, $currentMonth])->count(),
             ],
             'blog' => [
-                'current' => Blog::where('created_at', '>=', $currentMonth)->count(),
+                'current'  => Blog::where('created_at', '>=', $currentMonth)->count(),
                 'previous' => Blog::whereBetween('created_at', [$lastMonth, $currentMonth])->count(),
             ],
             'messages' => [
-                'current' => Contact::where('created_at', '>=', $currentMonth)->count(),
+                'current'  => Contact::where('created_at', '>=', $currentMonth)->count(),
                 'previous' => Contact::whereBetween('created_at', [$lastMonth, $currentMonth])->count(),
             ],
         ];

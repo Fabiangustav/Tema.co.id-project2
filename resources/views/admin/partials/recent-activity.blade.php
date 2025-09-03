@@ -1,79 +1,68 @@
 {{-- resources/views/admin/dashboard/partials/recent-activity.blade.php --}}
-<div class="col-lg-8">
-    <div class="card modern-card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">
-                <i class="bi bi-activity me-2"></i>Recent Activity
-            </h5>
-            <button class="btn btn-sm btn-outline-primary" id="refreshActivityBtn">
-                <i class="bi bi-arrow-clockwise"></i>
-            </button>
+<div class="col-lg-12">
+    <div class="card modern-card shadow-lg border-0 rounded-4">
+        <!-- Header -->
+        <div class="card-header bg-white d-flex justify-content-between align-items-center px-4 py-3">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-activity text-primary me-2 fs-5"></i>
+                <h5 class="mb-0 fw-bold">Recent Activity</h5>
+            </div>
+            <div class="d-flex gap-2">
+                <select class="form-select form-select-sm" style="width: auto;">
+                    <option value="all">Semua</option>
+                    <option value="berita">Berita</option>
+                    <option value="blog">Blog</option>
+                    <option value="region">Regions</option>
+                </select>
+                <button class="btn btn-sm btn-outline-primary" id="refreshActivityBtn">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+            </div>
         </div>
-        <div class="card-body">
+
+        <!-- Body -->
+        <div class="card-body p-4" style="max-height: 400px; overflow-y: auto;">
             <div class="activity-timeline" id="activityTimeline">
                 @forelse($recentActivities as $activity)
-                    <div class="activity-item" data-activity-id="{{ $activity['id'] ?? '' }}">
-                        <div class="activity-icon bg-{{ $activity['type'] ?? 'primary' }}">
-                            <i class="bi bi-{{ $activity['icon'] ?? 'circle' }}"></i>
+                    <div class="activity-item d-flex align-items-start mb-4" 
+                         data-activity-id="{{ $activity['id'] ?? '' }}">
+                        <div class="activity-icon rounded-circle bg-{{ $activity['type'] ?? 'primary' }} 
+                                    d-flex align-items-center justify-content-center me-3" 
+                             style="width: 45px; height: 45px;">
+                            <i class="bi bi-{{ $activity['icon'] ?? 'circle' }} text-white"></i>
                         </div>
-                        <div class="activity-content">
-                            <h6>{{ $activity['title'] ?? 'Activity' }}</h6>
-                            <p class="text-muted">{{ $activity['description'] ?? 'No description' }}</p>
-                            <small class="text-muted">{{ $activity['created_at'] ?? 'Just now' }}</small>
+                        <div class="activity-content flex-grow-1">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="fw-semibold mb-1">{{ $activity['title'] ?? 'Activity' }}</h6>
+                                <span class="badge bg-light text-muted">
+                                    {{ $activity['created_at'] ?? 'Just now' }}
+                                </span>
+                            </div>
+                            <p class="text-muted small mb-1">{{ $activity['description'] ?? 'No description' }}</p>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-eye"></i> Detail
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i> Hapus
+                                </button>
+                            </div>
                         </div>
                     </div>
                 @empty
-                    <div class="activity-item" data-activity-id="demo-1">
-                        <div class="activity-icon bg-success">
-                            <i class="bi bi-plus-circle"></i>
-                        </div>
-                        <div class="activity-content">
-                            <h6>Berita baru ditambahkan</h6>
-                            <p class="text-muted">"Tips Menggunakan AI dalam Bisnis" telah dipublikasi</p>
-                            <small class="text-muted">2 jam yang lalu</small>
-                        </div>
-                    </div>
-                    
-                    <div class="activity-item" data-activity-id="demo-2">
-                        <div class="activity-icon bg-primary">
-                            <i class="bi bi-pencil"></i>
-                        </div>
-                        <div class="activity-content">
-                            <h6>Blog post diupdate</h6>
-                            <p class="text-muted">"Panduan SEO 2025" telah diperbarui</p>
-                            <small class="text-muted">4 jam yang lalu</small>
-                        </div>
-                    </div>
-                    
-                    <div class="activity-item" data-activity-id="demo-3">
-                        <div class="activity-icon bg-warning">
-                            <i class="bi bi-image"></i>
-                        </div>
-                        <div class="activity-content">
-                            <h6>Slider diperbarui</h6>
-                            <p class="text-muted">Banner promosi baru ditambahkan</p>
-                            <small class="text-muted">1 hari yang lalu</small>
-                        </div>
-                    </div>
-
-                    <div class="activity-item" data-activity-id="demo-4">
-                        <div class="activity-icon bg-info">
-                            <i class="bi bi-geo-alt"></i>
-                        </div>
-                        <div class="activity-content">
-                            <h6>Region baru ditambahkan</h6>
-                            <p class="text-muted">Wilayah Jawa Tengah telah diaktifkan</p>
-                            <small class="text-muted">2 hari yang lalu</small>
-                        </div>
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                        Belum ada aktivitas terbaru
                     </div>
                 @endforelse
             </div>
-            
-            <div class="text-center mt-3">
-                <button class="btn btn-sm btn-outline-secondary" id="loadMoreActivities">
-                    Lihat Lebih Banyak
-                </button>
-            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="card-footer bg-white text-center py-3">
+            <button class="btn btn-sm btn-outline-secondary" id="loadMoreActivities">
+                <i class="bi bi-chevron-down"></i> Lihat Lebih Banyak
+            </button>
         </div>
     </div>
 </div>

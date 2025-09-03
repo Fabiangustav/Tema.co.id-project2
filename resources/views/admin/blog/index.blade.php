@@ -1,67 +1,76 @@
-@extends('layouts.admin')
-
-@section('title', 'Manage Blog')
+@extends('layouts.admin') {{-- sesuaikan dengan layout kamu --}}
+@section('title', 'Daftar blog')
 
 @section('content')
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Manage Berita</h2>
-        <a href="{{ route('blog.create') }}" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Add New Berita
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Daftar Berita</h2>
+        <a href="{{ route('admin.blog.create') }}" class="btn btn-primary">
+           + Tambah Blog
         </a>
     </div>
 
     @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
+        <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <div class="card">
+    <div class="card shadow">
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>No</th>
+                        <th>Judul</th>
+                        <th>Slug</th>
+                        <th>Status</th>
+                        <th>Gambar</th>
+                        <th>Created At</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($blogs as $index => $blog)
                         <tr>
-                            <th>Title</th>
-                            <th>Status</th>
-                            <th>Created At</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($beritas as $berita)
-                        <tr>
-                            <td>{{ $berita->title }}</td>
+                            <td>{{ $index + $blog->firstItem() }}</td>
+                            <td>{{ $blog->title }}</td>
+                            <td>{{ $blog->slug }}</td>
                             <td>
-                                <span class="badge bg-{{ $berita->status === 'published' ? 'success' : 'warning' }}">
-                                    {{ $berita->status }}
+                                <span class="badge bg-{{ $berita->status == 'published' ? 'success' : 'secondary' }}">
+                                    {{ ucfirst($berita->status) }}
                                 </span>
                             </td>
-                            <td>{{ $berita->created_at->format('d M Y') }}</td>
                             <td>
-                                <a href="{{ route('.blog.edit', $berita) }}" class="btn btn-sm btn-info">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <form action="{{ route('blog.destroy', $berita) }}" method="POST" class="d-inline">
+                                @if($blog->image)
+                                    <img src="{{ asset('storage/' . $blog->image) }}" width="80" class="img-thumbnail">
+                                @else
+                                    <small class="text-muted">Tidak ada</small>
+                                @endif
+                            </td>
+                            <td>{{ $blog->created_at->format('d M Y H:i') }}</td>
+                            <td>
+                                <a href="{{ route('admin.blog.edit', $blog->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <form action="{{ route('admin.blog.destroy', $blog->id) }}" 
+                                      method="POST" 
+                                      class="d-inline"
+                                      onsubmit="return confirm('Yakin ingin menghapus?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
+                                    <button class="btn btn-sm btn-danger">Hapus</button>
                                 </form>
                             </td>
                         </tr>
-                        @empty
+                    @empty
                         <tr>
-                            <td colspan="4" class="text-center">No berita found</td>
+                            <td colspan="7" class="text-center">Belum ada Blog</td>
                         </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                    @endforelse
+                </tbody>
+            </table>
+
+            {{-- pagination --}}
+            <div class="d-flex justify-content-center">
+                {{ $blog->links() }}
             </div>
-            
-            {{ $beritas->links() }}
         </div>
     </div>
 </div>

@@ -1,109 +1,124 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html class="no-js" lang="zxx">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">"
-    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="PT. Tema - Trijaya Excel Madura, Admin Panel">
+    <meta name="description" content="Login Panel Admin PT. Tema">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Admin Login | PT. Tema</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('img/favicon.png') }}">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700&display=swap" rel="stylesheet">
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/icofont.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/animate.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url("{{ asset('img/bg-login.jpg') }}") no-repeat center center/cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-box {
+            background: #fff;
+            padding: 40px 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            width: 400px;
+            animation: fadeInDown 0.8s;
+        }
+        .login-box .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .login-box .logo img {
+            max-width: 100px;
+        }
+        .login-box h2 {
+            font-weight: 600;
+            font-size: 22px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .btn-login {
+            width: 100%;
+            background: #1a76d1;
+            color: #fff;
+            font-weight: 600;
+        }
+        .btn-login:hover {
+            background: #155cb0;
+        }
+        .forgot-password {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .forgot-password a {
+            color: #1a76d1;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
-    <!-- Background Animation -->
-    <div class="bg-animation"></div>
-    
-    <!-- Particles -->
-    <div class="particles" id="particles"></div>
 
-    <!-- Main Login Container -->
-    <div class="login-container">
-        <div class="login-card" data-aos="zoom-in" data-aos-duration="800">
-            <div class="card-body">
-                <!-- Logo and Brand -->
-                <div class="logo-container">
-                    <div class="logo">
-                        <i class="bi bi-shield-lock"></i>
-                    </div>
-                    <h2 class="brand-title">PT. TEMA</h2>
-                    <p class="brand-subtitle">Admin Panel Login</p>
-                </div>
+    <div class="login-box">
+        <div class="logo">
+            <img src="{{ asset('img/logotema.png') }}" alt="PT. Tema">
+        </div>
+        <h2>Admin Panel Login</h2>
 
-                <!-- Error Alert -->
-                <div class="alert alert-danger d-none" id="errorAlert">
-                    <i class="bi bi-exclamation-triangle me-2"></i>
-                    <span id="errorMessage">Invalid email or password</span>
-                </div>
+        <!-- Error Alert -->
+        @if(session('error'))
+        <div class="alert alert-danger">
+            <i class="icofont-warning"></i> {{ session('error') }}
+        </div>
+        @endif
 
-                <!-- Success Alert -->
-                <div class="alert alert-success d-none" id="successAlert">
-                    <i class="bi bi-check-circle me-2"></i>
-                    <span>Login successful! Redirecting...</span>
-                </div>
-
-                <!-- Login Form -->
-                <form id="loginForm" action="/admin/login" method="POST">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    
-                    <!-- Email Input -->
-                    <div class="input-group mb-3">
-                        <i class="bi bi-envelope input-icon"></i>
-                        <input type="email" 
-                               name="email" 
-                               class="form-control with-icon" 
-                               placeholder="Email address"
-                               required>
-                    </div>
-
-                    <!-- Password Input -->
-                    <div class="input-group mb-3">
-                        <i class="bi bi-lock input-icon"></i>
-                        <input type="password" 
-                               name="password" 
-                               id="passwordField"
-                               class="form-control with-icon" 
-                               placeholder="Password"
-                               required>
-                        <button type="button" class="password-toggle" onclick="togglePassword()">
-                            <i class="bi bi-eye" id="passwordToggleIcon"></i>
-                        </button>
-                    </div>
-
-                    <!-- Remember Me -->
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="remember" id="rememberMe">
-                        <label class="form-check-label" for="rememberMe">
-                            Remember me
-                        </label>
-                    </div>
-
-                    <!-- Login Button -->
-                    <button type="submit" class="btn btn-login" id="loginBtn">
-                        <span class="btn-text">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>
-                            Sign In
-                        </span>
-                        <div class="spinner"></div>
-                    </button>
-                </form>
-
-                <!-- Forgot Password -->
-                <div class="forgot-password">
-                    <a href="#" onclick="showForgotPassword()">Forgot your password?</a>
-                </div>
+        <!-- Login Form -->
+        <form action="{{ route('admin.login.submit') }}" method="POST">
+            @csrf
+            <div class="form-group mb-3">
+                <label><i class="icofont-email"></i> Username</label>
+                <input type="email" name="email" class="form-control" placeholder="Username" required>
             </div>
+            <div class="form-group mb-3">
+                <label><i class="icofont-lock"></i> Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Password" required>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" name="remember" id="rememberMe">
+                <label class="form-check-label" for="rememberMe">
+                    Remember me
+                </label>
+            </div>
+            <button type="submit" class="btn btn-login">Sign In</button>
+        </form>
+
+        <div class="forgot-password">
+            <a href="#">Forgot your password?</a>
         </div>
     </div>
 
-    <!-- Success Animation -->
-    <div class="success-animation" id="successAnimation">
-        <div class="success-checkmark">
-            <i class="bi bi-check"></i>
-        </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script src="{{ asset('js/login.js') }}"></script>
+    <!-- Scripts -->
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/wow.min.js') }}"></script>
+    <script>
+        new WOW().init();
+    </script>
 </body>
 </html>

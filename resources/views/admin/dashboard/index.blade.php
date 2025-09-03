@@ -29,9 +29,6 @@
             @include('admin.partials.recent-activity', [
                 'recentActivities' => $recentActivities ?? []
             ])
-
-            {{-- Stats & Quick Info --}}
-            @include('admin.partials.sidebar-stats')
         </div>
 
         {{-- Content Management Overview --}}

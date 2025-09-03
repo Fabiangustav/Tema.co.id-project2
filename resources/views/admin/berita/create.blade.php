@@ -44,8 +44,8 @@
                 </div>
 
                 <div class="text-end">
-                    <a href="{{ route('berita.index') }}" class="btn btn-secondary">Cancel</a>
-                    <button type="submit" class="btn btn-primary">Create Berita</button>
+                    <a href="{{ route('dashboard') }}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary" href="">Create Berita</button>
                 </div>
             </form>
         </div>
