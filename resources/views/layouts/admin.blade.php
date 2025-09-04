@@ -6,6 +6,9 @@
     <title>Admin Panel - @yield('title')</title>
 
     {{-- Stylesheets --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"> {{-- pastikan nama file benar --}}
 
@@ -13,13 +16,7 @@
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a href="{{ route('blog.store') }}" class="navbar-brand px-3">Admin Panel</a>
-            <a href="{{ url('/') }}" class="btn btn-sm btn-outline-light">Lihat Website</a>
-        </div>
-    </nav>
-
+    @include('components.navbar_admin')
     {{-- Main Content --}}
     <div class="container mt-4">
         @yield('content')

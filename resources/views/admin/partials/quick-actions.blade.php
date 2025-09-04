@@ -3,8 +3,8 @@
     <div class="col-12">
         <div class="card modern-card">
             <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="bi bi-lightning me-2"></i>Quick Actions
+                <h5 class="mb-3" style="color: black;">
+                    Quick Actions
                 </h5>
             </div>
             <div class="card-body">
@@ -23,22 +23,11 @@
 
                     {{-- Buat Blog (sementara arahkan juga ke berita atau nanti bikin BlogController) --}}
                     <div class="col-md-2 col-6">
-                        <a href="{{ route('admin.berita.create') }}" class="quick-action-btn" data-action="create-blog">
+                        <a href="{{ route('admin.blog.create') }}" class="quick-action-btn" data-action="create-blog">
                             <div class="quick-action-icon bg-success">
                                 <i class="bi bi-journal-plus"></i>
                             </div>
                             <span>Buat Blog</span>
-                        </a>
-                    </div>
-
-                    {{-- Kelola Slider --}}
-                    <div class="col-md-2 col-6">
-                        <a href="{{ route('admin.berita.index') }}" class="quick-action-btn" 
-                           data-action="manage-slider">
-                            <div class="quick-action-icon bg-warning">
-                                <i class="bi bi-images"></i>
-                            </div>
-                            <span>Kelola Slider</span>
                         </a>
                     </div>
 
@@ -49,21 +38,9 @@
                             <div class="quick-action-icon bg-info">
                                 <i class="bi bi-building"></i>
                             </div>
-                            <span>Edit About</span>
+                            <span>Edit Blog</span>
                         </a>
                     </div>
-
-                    {{-- Kontak --}}
-                    <div class="col-md-2 col-6">
-                        <a href="{{ route('admin.kontak.index') }}" class="quick-action-btn" 
-                           data-action="manage-contact">
-                            <div class="quick-action-icon bg-secondary">
-                                <i class="bi bi-telephone"></i>
-                            </div>
-                            <span>Kontak</span>
-                        </a>
-                    </div>
-
                     {{-- Regions --}}
                     <div class="col-md-2 col-6">
                         <a href="{{ route('admin.regions.index') }}" class="quick-action-btn" data-action="manage-regions">

@@ -24,34 +24,35 @@ class BeritaController extends Controller
     }
 
     // Simpan berita baru
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'title'   => 'required|string|max:255',
-            'content' => 'required',
-            'image'   => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'status'  => 'required|in:draft,published'
-        ]);
+  public function store(Request $request)
+{
+    $validated = $request->validate([
+        'title'   => 'required|string|max:255',
+        'slug'    => 'required|string|max:255|unique:beritas,slug',
+        'content' => 'required',
+        'image'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'status'  => 'required|in:draft,published'
+    ]);
 
-        // upload gambar
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('berita', 'public');
-        }
-
-        // generate slug unik
-        $validated['slug'] = Str::slug($validated['title']);
-        $originalSlug = $validated['slug'];
-        $counter = 1;
-        while (Berita::where('slug', $validated['slug'])->exists()) {
-            $validated['slug'] = $originalSlug . '-' . $counter;
-            $counter++;
-        }
-
-        Berita::create($validated);
-
-        return redirect()->route('admin.berita.index')
-            ->with('success', 'Berita berhasil dibuat');
+    if ($request->hasFile('image')) {
+        $validated['image'] = $request->file('image')->store('berita', 'public');
     }
+
+    // Pastikan slug unik
+    $originalSlug = $validated['slug'];
+    $counter = 1;
+    while (Berita::where('slug', $validated['slug'])->exists()) {
+        $validated['slug'] = $originalSlug . '-' . $counter;
+        $counter++;
+    }
+
+    Berita::create($validated);
+
+    // Redirect ke index
+    return redirect()->route('admin.berita.index')
+        ->with('success', 'Berita berhasil dibuat');
+}
+
 
     // Form edit berita
     public function edit($id)
@@ -67,22 +68,22 @@ class BeritaController extends Controller
 
         $validated = $request->validate([
             'title'   => 'required|string|max:255',
+            'slug'    => 'required|string|max:255|unique:beritas,slug,' . $berita->id,
             'content' => 'required',
-            'image'   => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status'  => 'required|in:draft,published',
         ]);
 
-        // cek upload gambar baru
+        // Cek upload gambar baru
         if ($request->hasFile('image')) {
-            // hapus gambar lama
+            // Hapus gambar lama jika ada
             if ($berita->image && Storage::disk('public')->exists($berita->image)) {
                 Storage::disk('public')->delete($berita->image);
             }
             $validated['image'] = $request->file('image')->store('berita', 'public');
         }
 
-        // update slug unik
-        $validated['slug'] = Str::slug($validated['title']);
+        // Pastikan slug unik (fallback jika validasi gagal)
         $originalSlug = $validated['slug'];
         $counter = 1;
         while (Berita::where('slug', $validated['slug'])
@@ -103,7 +104,7 @@ class BeritaController extends Controller
     {
         $berita = Berita::findOrFail($id);
 
-        // hapus gambar dari storage
+        // Hapus gambar dari storage jika ada
         if ($berita->image && Storage::disk('public')->exists($berita->image)) {
             Storage::disk('public')->delete($berita->image);
         }
@@ -112,5 +113,21 @@ class BeritaController extends Controller
 
         return redirect()->route('admin.berita.index')
             ->with('success', 'Berita berhasil dihapus');
+    }
+
+    // Method untuk generate slug dari AJAX (opsional)
+    public function generateSlug(Request $request)
+    {
+        $title = $request->input('title');
+        $slug = Str::slug($title);
+        
+        $originalSlug = $slug;
+        $counter = 1;
+        while (Berita::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+        
+        return response()->json(['slug' => $slug]);
     }
 }

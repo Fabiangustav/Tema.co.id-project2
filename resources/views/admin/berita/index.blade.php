@@ -3,13 +3,18 @@
 
 @section('content')
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="mb-3">
         <h2>Daftar Berita</h2>
-        <a href="{{ route('admin.berita.create') }}" class="btn btn-primary">
-            + Tambah Berita
-        </a>
+        <div class="d-flex gap-2 mt-2">
+            <a href="{{ route('admin.berita.create') }}" class="btn btn-primary">
+                + Tambah Berita
+            </a>
+            <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">
+                Kembali ke Dashboard
+            </a>
+        </div>
     </div>
-
+</div>
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif

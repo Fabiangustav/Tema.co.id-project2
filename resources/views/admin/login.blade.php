@@ -89,11 +89,11 @@
         @endif
 
         <!-- Login Form -->
-        <form action="{{ route('admin.login.submit') }}" method="POST">
-            @csrf
+        <form action="{{ route('admin.login.post') }}" method="POST">
+    @csrf
             <div class="form-group mb-3">
                 <label><i class="icofont-email"></i> Username</label>
-                <input type="email" name="email" class="form-control" placeholder="Username" required>
+                <input type="text" name="username" class="form-control" placeholder="Username" required>
             </div>
             <div class="form-group mb-3">
                 <label><i class="icofont-lock"></i> Password</label>

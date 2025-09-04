@@ -10,15 +10,14 @@
 @section('content')
     <div class="container-fluid">
         {{-- Dashboard Header --}}
-        @include('admin.partials.header')
+      {{-- @include('admin.partials.header') --}}
 
         {{-- Statistics Cards --}}
-        @include('admin.partials.statistics', [
+        {{-- @include('admin.partials.statistics', [
             'totalBerita' => $totalBerita ?? 145,
             'totalBlog' => $totalBlog ?? 89,
-            'totalSlider' => $totalSlider ?? 12,
             'totalRegions' => $totalRegions ?? 8
-        ])
+        ]) --}}
 
         {{-- Quick Actions --}}
         @include('admin.partials.quick-actions')
