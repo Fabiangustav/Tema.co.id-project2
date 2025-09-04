@@ -1,77 +1,72 @@
-@extends('layouts.admin') {{-- sesuaikan dengan layout kamu --}}
-@section('title', 'Daftar Blog')
+@extends('layouts.admin') {{-- sesuaikan dengan layout utama kamu --}}
+@section('title', 'Edit Blog')
 
 @section('content')
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Daftar Blog</h2>
-        <a href="{{ route('admin.blog.create') }}" class="btn btn-success">
-            + Tambah Blog
-        </a>
-    </div>
+    <h2>Edit Blog</h2>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
     @endif
 
     <div class="card shadow">
         <div class="card-body">
-            <table class="table table-bordered table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>No</th>
-                        <th>Judul</th>
-                        <th>Slug</th>
-                        <th>Status</th>
-                        <th>Gambar</th>
-                        <th>Created At</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($blogs as $index => $blog)
+            <form action="{{ route('admin.blog.update', $blog->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
 
-                        <tr>
-                            <td>{{ $index + $blogs->firstItem() }}</td>
-                            <td>{{ $blog->title }}</td>
-                            <td>{{ $blog->slug }}</td>
-                            <td>
-                                <span class="badge bg-{{ $blog->status == 'published' ? 'success' : 'secondary' }}">
-                                    {{ ucfirst($blog->status) }}
-                                </span>
-                            </td>
-                            <td>
-                                @if($blog->image)
-                                    <img src="{{ asset('storage/' . $blog->image) }}" width="80" class="img-thumbnail">
-                                @else
-                                    <small class="text-muted">Tidak ada</small>
-                                @endif
-                            </td>
-                            <td>{{ $blog->created_at->format('d M Y H:i') }}</td>
-                            <td>
-                                <a href="{{ route('admin.blog.edit', $blog->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                <form action="{{ route('admin.blog.destroy', $blog->id) }}" 
-                                      method="POST" 
-                                      class="d-inline"
-                                      onsubmit="return confirm('Yakin ingin menghapus?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-danger">Hapus</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="text-center">Belum ada blog</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Judul</label>
+                    <input type="text" name="title" id="title"
+                           value="{{ old('title', $blog->title) }}"
+                           class="form-control @error('title') is-invalid @enderror">
+                    @error('title')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            {{-- pagination --}}
-            <div class="d-flex justify-content-center">
-                {{ $blogs->links() }}
-            </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Konten</label>
+                    <textarea name="content" id="content" rows="5"
+                              class="form-control @error('content') is-invalid @enderror">{{ old('content', $blog->content) }}</textarea>
+                    @error('content')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select name="status" id="status" class="form-control">
+                        <option value="draft" {{ old('status', $blog->status) == 'draft' ? 'selected' : '' }}>Draft</option>
+                        <option value="published" {{ old('status', $blog->status) == 'published' ? 'selected' : '' }}>Published</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="image" class="form-label">Gambar</label>
+                    @if($blog->image)
+                        <div class="mb-2">
+                            <img src="{{ asset('storage/' . $blog->image) }}" width="120" class="img-thumbnail">
+                        </div>
+                    @endif
+                    <input type="file" name="image" id="image"
+                           class="form-control @error('image') is-invalid @enderror">
+                    @error('image')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="text-end">
+                    <a href="{{ route('admin.blog.index') }}" class="btn btn-secondary">Batal</a>
+                    <button type="submit" class="btn btn-primary">Update Blog</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

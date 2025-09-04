@@ -1,8 +1,8 @@
-<?php
 @extends('admin')
-<title>Admin Panel - @yield('title')</title>
-...
-@yield('content')
+
+@section('title', 'Admin Panel')
+
+@section('content')
 <!doctype html>
 <html lang="id">
 <head>
@@ -25,4 +25,4 @@
     @stack('scripts')
 </body>
 </html>
-?>
+@endsection

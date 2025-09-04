@@ -89,7 +89,7 @@ class BlogController extends Controller
         $blog = Blog::findOrFail($id);
         $blog->title   = $request->title;
         $blog->slug    = Str::slug($request->title);
-        $blog->content = $request->content;
+        $blog->content = $request->content; 
         $blog->status  = $request->status;
 
         // Update image kalau ada upload baru

@@ -4,7 +4,7 @@
 @section('content')
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Daftar Berita</h2>
+        <h2>isi Blog</h2>
         <a href="{{ route('admin.blog.create') }}" class="btn btn-primary">
            + Tambah Blog
         </a>
@@ -49,8 +49,8 @@
                             <td>{{ $blog->created_at->format('d M Y H:i') }}</td>
                             <td>
                                 <a href="{{ route('admin.blog.edit', $blog->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                <form action="{{ route('admin.blog.destroy', $blog->id) }}" 
-                                      method="POST" 
+                                <form action="{{ route('admin.blog.destroy', $blog->id) }}"
+                                      method="POST"
                                       class="d-inline"
                                       onsubmit="return confirm('Yakin ingin menghapus?')">
                                     @csrf
@@ -69,7 +69,7 @@
 
             {{-- pagination --}}
             <div class="d-flex justify-content-center">
-                {{ $blog->links() }}
+                {{ $blogs->links() }}
             </div>
         </div>
     </div>

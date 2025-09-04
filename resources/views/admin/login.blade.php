@@ -83,17 +83,17 @@
 
         <!-- Error Alert -->
         @if(session('error'))
-        <div class="alert alert-danger">
-            <i class="icofont-warning"></i> {{ session('error') }}
-        </div>
-        @endif
+            <div class="alert alert-danger">
+                <i class="icofont-warning"></i> {{ session('error') }}
+            </div>
+            @endif
 
         <!-- Login Form -->
         <form action="{{ route('admin.login.post') }}" method="POST">
     @csrf
             <div class="form-group mb-3">
-                <label><i class="icofont-email"></i> Username</label>
-                <input type="text" name="username" class="form-control" placeholder="Username" required>
+                <label><i class="icofont-user"></i> Nama</label>
+                <input type="text" name="name" class="form-control" placeholder="Nama" required>
             </div>
             <div class="form-group mb-3">
                 <label><i class="icofont-lock"></i> Password</label>

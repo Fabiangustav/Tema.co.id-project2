@@ -17,25 +17,24 @@ class LoginController extends Controller
     {
         // ✅ Validasi input
         $credentials = $request->validate([
-            'username' => 'required|string',
+            'name' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        // ✅ Pastikan field username dipakai Auth::attempt()
+        // ✅ Autentikasi pakai 'name'
         if (Auth::attempt([
-            'username' => $credentials['username'],
+            'name' => $credentials['name'],
             'password' => $credentials['password'],
         ])) {
             $request->session()->regenerate();
 
-            // ✅ Redirect ke route admin.dashboard
             return redirect()->route('admin.dashboard');
         }
 
-        // ❌ kamu masih pakai 'email' disini, padahal login pakai username
+        // ❌ Login gagal
         return back()->withErrors([
-            'username' => 'Username atau password salah.',
-        ])->onlyInput('username');
+            'name' => 'Nama atau password salah.',
+        ])->onlyInput('name');
     }
 
     public function logout(Request $request)
@@ -47,9 +46,9 @@ class LoginController extends Controller
         return redirect()->route('admin.login');
     }
 
-    // ✅ Opsional, kalau kamu pakai username, bisa hapus method ini
+    // ✅ Override credential field
     public function username()
     {
-        return 'username';
+        return 'name';
     }
 }
