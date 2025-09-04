@@ -8,36 +8,37 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    // ✅ Tampilkan form login
+    // Tampilkan form login
     public function showLoginForm()
     {
         return view('admin.login');
     }
 
-    // ✅ Proses login
+    // Proses login
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'username'    => ['required', 'username'],
-            'password' => ['required'],
+            'name' => ['required', 'string'],
+            'password' => ['required', 'string'],
         ]);
 
-        if (Auth::attempt($credentials)) {
+        // ✅ Gunakan guard 'admin'
+        if (Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
 
-            // ✅ arahkan ke dashboard admin
-            return redirect()->route('admin.dashboard');
+            // Redirect ke dashboard admin
+            return redirect()->route('admin.dashboard.index');
         }
 
         return back()->withErrors([
-            'username' => 'Username atau password salah.',
-        ])->onlyInput('username');
+            'name' => 'Name atau password salah.',
+        ])->onlyInput('name');
     }
 
-    // ✅ Logout
+    // Logout
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('admin')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

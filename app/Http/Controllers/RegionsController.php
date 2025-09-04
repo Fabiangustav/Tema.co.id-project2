@@ -3,72 +3,78 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Region;
 
 class RegionsController extends Controller
 {
-    // Tampilkan daftar region
+    // Tampilkan daftar region (untuk admin)
     public function index()
     {
-        return view('regions.index');
+        // Ambil semua region + hitung jumlah cities
+        $regions = Region::withCount('cities')->paginate(10);
+
+        return view('admin.regions.index', compact('regions'));
     }
 
     // Form tambah region baru
     public function create()
     {
-        return view('regions.create');
+        return view('admin.regions.create');
     }
 
     // Simpan data region baru
     public function store(Request $request)
     {
-        // Validasi input
         $request->validate([
             'name' => 'required|string|max:100',
+            'code' => 'required|string|max:10|unique:regions,code',
         ]);
 
-        // Simpan ke database (contoh, jika ada model Region)
-        // Region::create([
-        //     'name' => $request->name,
-        // ]);
+        Region::create([
+            'name'      => $request->name,
+            'code'      => $request->code,
+            'is_active' => $request->has('is_active') ? true : false,
+        ]);
 
-        return redirect()->route('regions.index')->with('success', 'Region berhasil ditambahkan');
-    }
-
-    // Detail region
-    public function show($id)
-    {
-        // $region = Region::findOrFail($id);
-        return view('regions.show', compact('id'));
+        return redirect()->route('admin.regions.index')->with('success', 'Region berhasil ditambahkan');
     }
 
     // Form edit region
-    public function edit($id)
+    public function edit(Region $region)
     {
-        // $region = Region::findOrFail($id);
-        return view('regions.edit', compact('id'));
+        return view('admin.regions.edit', compact('region'));
     }
 
     // Update data region
-    public function update(Request $request, $id)
+    public function update(Request $request, Region $region)
     {
         $request->validate([
             'name' => 'required|string|max:100',
+            'code' => 'required|string|max:10|unique:regions,code,' . $region->id,
         ]);
 
-        // $region = Region::findOrFail($id);
-        // $region->update([
-        //     'name' => $request->name,
-        // ]);
+        $region->update([
+            'name'      => $request->name,
+            'code'      => $request->code,
+            'is_active' => $request->has('is_active') ? true : false,
+        ]);
 
-        return redirect()->route('regions.index')->with('success', 'Region berhasil diperbarui');
+        return redirect()->route('admin.regions.index')->with('success', 'Region berhasil diperbarui');
     }
 
     // Hapus data region
-    public function destroy($id)
+    public function destroy(Region $region)
     {
-        // $region = Region::findOrFail($id);
-        // $region->delete();
+        $region->delete();
+        return redirect()->route('admin.regions.index')->with('success', 'Region berhasil dihapus');
+    }
 
-        return redirect()->route('regions.index')->with('success', 'Region berhasil dihapus');
+    // Toggle status aktif/inaktif (AJAX)
+    public function toggleStatus(Request $request, Region $region)
+    {
+        $region->is_active = $request->input('is_active', false);
+        $region->save();
+
+        return response()->json(['success' => true]);
     }
 }

@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\RegionsController;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\{
     DashboardController,
     BeritaController,
@@ -41,25 +40,30 @@ Route::resource('regions', RegionsController::class)->only(['index', 'show']);
 // Admin Routes
 // ====================
 Route::prefix('admin')->name('admin.')->group(function () {
-Route::resource('berita', BeritaController::class);
-    // Auth Routes (Guest only)
-    Route::middleware('guest')->group(function () {
-        Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
-        Route::post('login', [LoginController::class, 'login'])->name('login.post');
+
+    Route::resource('berita', BeritaController::class);
+
+    // Auth Routes (Guest only) pakai guard admin
+    Route::middleware('guest:admin')->group(function () {
+        Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+        Route::post('login', [AuthController::class, 'login'])->name('login.post');
     });
 
-    // Protected Admin Routes (Auth required)
-    Route::middleware(['auth'])->group(function () {
+    // Protected Admin Routes (Auth required) pakai guard admin
+    Route::middleware('auth:admin')->group(function () {
 
         // Logout
-        Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+        Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
         // Dashboard
-        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
+        // Redirect /admin langsung ke dashboard
+        Route::get('/', function () {
+            return redirect()->route('admin.dashboard.index');
+        })->name('dashboard');
+
         // Content Management - Resources
-        
         Route::resource('blog', BlogController::class);
         Route::resource('users', UserController::class);
         Route::resource('kontak', KontakController::class)->only(['index', 'show', 'destroy']);
@@ -75,3 +79,4 @@ Route::resource('berita', BeritaController::class);
         Route::get('slider', [SliderController::class, 'index'])->name('slider.index');
     });
 });
+
