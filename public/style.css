@@ -4493,3 +4493,21 @@ scroll-behavior: smooth;
 .header .nav li a.active {
   color: #007bff;
 }
+
+
+
+.city-title {
+    font-family: 'Poppins', sans-serif; /* atau font lain yang kamu mau */
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+
+.city-subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #fff;
+    margin: 0;
+}

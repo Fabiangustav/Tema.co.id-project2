@@ -37,15 +37,15 @@
                             <nav id="navbar" class="navigation">
                                 <ul class="nav menu">
 
+
                                     <li class="nav-item">
-    <li class="nav-item">
-  <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}"
-     href="{{ route('home') }}#tema" data-section="tema">TEMA</a>
-</li>
-<li class="nav-item"><a class="nav-link" href="{{ route('home') }}#about"  data-section="about">About</a></li>
-<li class="nav-item"><a class="nav-link" href="{{ route('home') }}#berita" data-section="berita">Berita</a></li>
-<li class="nav-item"><a class="nav-link" href="{{ route('home') }}#blog"   data-section="blog">Blog</a></li>
-<li class="nav-item"><a class="nav-link" href="{{ route('home') }}#kontak" data-section="kontak">Kontak</a></li>
+                                <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}"
+                                    href="{{ route('home') }}#tema" data-section="tema">TEMA</a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#about"  data-section="about">About</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#berita" data-section="berita">Berita</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#blog"   data-section="blog">Blog</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#kontak" data-section="kontak">Kontak</a></li>
 
 
 
@@ -108,7 +108,7 @@
                                                     Sumedang
                                                 </a>
                                             </li>
-                                            <span class="nav-indicator"></span>
+
 
                                         </ul>
                                     </li>
