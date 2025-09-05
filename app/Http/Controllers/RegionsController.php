@@ -27,12 +27,12 @@ class RegionsController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:100',
-            'code' => 'required|string|max:10|unique:regions,code',
+            'nama kota' => 'required|string|max:10|unique:regions,code',
         ]);
 
         Region::create([
             'name'      => $request->name,
-            'code'      => $request->code,
+            'nama kota'      => $request->code,
             'is_active' => $request->has('is_active') ? true : false,
         ]);
 
@@ -50,12 +50,12 @@ class RegionsController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:100',
-            'code' => 'required|string|max:10|unique:regions,code,' . $region->id,
+            'nama kota' => 'required|string|max:10|unique:regions,code,' . $region->id,
         ]);
 
         $region->update([
             'name'      => $request->name,
-            'code'      => $request->code,
+            'nama kota'      => $request->code,
             'is_active' => $request->has('is_active') ? true : false,
         ]);
 

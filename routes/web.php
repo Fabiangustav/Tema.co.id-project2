@@ -78,5 +78,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Slider
         Route::get('slider', [SliderController::class, 'index'])->name('slider.index');
     });
+    // users
+    Route::get('admin/users/{id}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
 });
 
+// berita prefix
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('berita', BeritaController::class);
+});
