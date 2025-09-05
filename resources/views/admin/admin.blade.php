@@ -12,15 +12,14 @@
     @stack('styles')
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark">
-        <a href="{{ route('dashboard') }}" class="navbar-brand px-3">Admin Panel</a>
-        <a href="{{ url('/') }}" class="btn btn-sm btn-outline-light">Lihat Website</a>
-    </nav>
+     {{-- Navbar --}}
+    @include('admin.partials.navbar')
 
     <div class="container mt-4">
         @yield('content')
     </div>
 
+    <!-- Bootstrap JS Bundle -->
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     @stack('scripts')
 </body>

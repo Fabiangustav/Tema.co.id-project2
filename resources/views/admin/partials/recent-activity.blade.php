@@ -60,7 +60,9 @@
 
         <!-- Footer -->
         <div class="card-footer bg-light text-center py-3 rounded-bottom-4">
-            
+            <button class="btn btn-sm btn-outline-primary shadow-sm" id="loadMoreActivities">
+                <i class="bi bi-chevron-down"></i> Lihat Lebih Banyak
+            </button>
         </div>
     </div>
 </div>
