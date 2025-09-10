@@ -7,13 +7,16 @@ use App\Models\Berita;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Services\ActivityLogger;
+use App\Http\Controllers\Admin\ActivityLogController;
+
 
 class BeritaController extends Controller
 {
     // Tampilkan semua berita
     public function index()
     {
-        $beritas = Berita::latest()->paginate(10);
+        $beritas = Berita::latest()->paginate(6);
         return view('admin.berita.index', compact('beritas'));
     }
 
@@ -24,7 +27,7 @@ class BeritaController extends Controller
     }
 
     // Simpan berita baru
-  public function store(Request $request)
+public function store(Request $request)
 {
     $validated = $request->validate([
         'title'   => 'required|string|max:255',
@@ -35,7 +38,10 @@ class BeritaController extends Controller
     ]);
 
     if ($request->hasFile('image')) {
-        $validated['image'] = $request->file('image')->store('berita', 'public');
+        // simpan ke storage/app/public/berita
+        $path = $request->file('image')->store('berita', 'public');
+        // simpan nama file dengan path relatif
+        $validated['image'] = $path;
     }
 
     // Pastikan slug unik
@@ -46,12 +52,22 @@ class BeritaController extends Controller
         $counter++;
     }
 
-    Berita::create($validated);
+    $berita = Berita::create($validated);
 
-    // Redirect ke index
+    // ✅ Catat log (pakai $berita->title, bukan $validated->title)
+    // catat log
+    ActivityLogger::log(
+    'Berita Created',
+    "Berita '{$berita->title}' berhasil ditambahkan",
+    $berita->status
+);
+
+
+    
     return redirect()->route('admin.berita.index')
         ->with('success', 'Berita berhasil dibuat');
 }
+
 
 
     // Form edit berita
@@ -130,4 +146,10 @@ class BeritaController extends Controller
         
         return response()->json(['slug' => $slug]);
     }
+
+    public function show($slug)
+{
+    $berita = Berita::where('slug', $slug)->firstOrFail();
+    return view('ShowBerita', compact('berita'));
+}
 }

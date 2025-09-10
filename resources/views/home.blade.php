@@ -1,5 +1,6 @@
 <!doctype html>
 <html class="no-js" lang="zxx">
+
 <head>
     <!-- Meta Tags -->
     <meta charset="utf-8">
@@ -16,7 +17,9 @@
     <link rel="icon" href="img/favicon.png">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap"
+        rel="stylesheet">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -65,7 +68,7 @@
     </section>
     <!--/End About -->
 
-    
+
 
     <!-- Start Fun-facts -->
     <section id="funfact">
@@ -86,17 +89,19 @@
 
     <!-- Start Berita -->
     <section id="berita">
-        <x-berita />
+        <x-berita :var="$beritas" />
     </section>
     <!--/ End Berita -->
 
     <!-- Start Blog -->
+    <!-- Start Blog -->
     <section id="blog">
-        <x-blog />
+    <x-blog :var="$blogs" />
     </section>
 
+
     <!-- Start Clients -->
-    <div class="clients overlay">
+    {{-- <div class="clients overlay">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-12">
@@ -110,13 +115,13 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!--/ End Clients -->
 
     <!-- Start Kontak -->
     <section id="kontak">
         <x-kontak />
-    </section>
+    </section>  
     <!-- /End Kontak -->
 
     <!-- Footer Area -->
@@ -145,4 +150,5 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/main.js"></script>
 </body>
+
 </html>

@@ -1,4 +1,4 @@
-<section class="portfolio section">
+{{-- <section class="portfolio section">
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12">
@@ -41,4 +41,4 @@
 					</div>
 				</div>
 			</div>
-		</section>
+		</section> --}}

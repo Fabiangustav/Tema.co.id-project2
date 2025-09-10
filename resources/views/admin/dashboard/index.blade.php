@@ -17,7 +17,7 @@
     {{-- Recent Activity --}}
     <div class="row mb-4">
         @include('admin.partials.recent-activity', [
-            'recentActivities' => $recentActivities ?? []
+            'recentActivities' => $recentActivities ?? [],
         ])
     </div>
 
@@ -30,7 +30,7 @@
         'totalMessages' => $totalMessages ?? 24,
         'newMessages' => $newMessages ?? 5,
         'totalRegions' => $totalRegions ?? 8,
-        'activeRegions' => $activeRegions ?? 6
+        'activeRegions' => $activeRegions ?? 6,
     ])
 @endsection
 

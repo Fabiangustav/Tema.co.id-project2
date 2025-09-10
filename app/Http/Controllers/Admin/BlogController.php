@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Blog;
 use Illuminate\Support\Str;
+use App\Models\ActivityLog;
+
 
 class BlogController extends Controller
 {
@@ -29,40 +31,76 @@ class BlogController extends Controller
     /**
      * Simpan blog baru.
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title'   => 'required|string|max:255',
-            'content' => 'required',
-            'status'  => 'required|in:draft,published',
-            'image'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+public function store(Request $request)
+{
+    $validated = $request->validate([
+        'title'   => 'required|string|max:255',
+        'slug'    => 'required|string|max:255|unique:blogs,slug',
+        'content' => 'required',
+        'image'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'status'  => 'required|in:draft,published'
+    ]);
 
-        $blog = new Blog();
-        $blog->title   = $request->title;
-        $blog->slug    = Str::slug($request->title);
-        $blog->content = $request->content;
-        $blog->status  = $request->status;
-
-        // Upload image kalau ada
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('uploads/blogs', 'public');
-            $blog->image = $path;
-        }
-
-        $blog->save();
-
-        return redirect()->route('admin.blog.index')
-            ->with('success', 'Blog berhasil ditambahkan');
+    if ($request->hasFile('image')) {
+        $path = $request->file('image')->store('blog', 'public');
+        $validated['image'] = $path;
     }
 
+    $originalSlug = $validated['slug'];
+    $counter = 1;
+    while (Blog::where('slug', $validated['slug'])->exists()) {
+        $validated['slug'] = $originalSlug . '-' . $counter;
+        $counter++;
+    }
+
+    $blog = Blog::create($validated);
+
+    // ✅ log activity di sini
+    ActivityLog::create([
+        'title' => 'Blog baru ditambahkan',
+        'description' => $blog->title,
+        'type' => 'success',
+        'user' => auth()->user()->name ?? 'System'
+    ]);
+
+    $blog->save();
+
+ActivityLog::create([
+    'title' => 'Blog diperbarui',
+    'description' => $blog->title,
+    'type' => 'primary',
+    'user' => auth()->user()->name ?? 'System'
+]);
+
+return redirect()->route('admin.blog.index')
+    ->with('success', 'Blog berhasil diperbarui');
+
+
+    $title = $blog->title;
+$blog->delete();
+
+ActivityLog::create([
+    'title' => 'Blog dihapus',
+    'description' => $title,
+    'type' => 'danger',
+    'user' => auth()->user()->name ?? 'System'
+]);
+
+return redirect()->route('admin.blog.index')
+    ->with('success', 'Blog berhasil dihapus');
+
+    return redirect()->route('admin.blog.index')
+        ->with('success', 'Blog berhasil dibuat');
+}
+
+
     /**
-     * Detail blog.
+     * Detail blog berdasarkan slug.
      */
-/*    public function show($id)
+    public function show($slug)
     {
-        $blog = Blog::findOrFail($id);
-        return view('admin.blog.show', compact('blog'));
+        $blog = Blog::where('slug', $slug)->firstOrFail();
+        return view('ShowBlog', compact('blog'));
     }
 
     /**
@@ -114,5 +152,14 @@ class BlogController extends Controller
 
         return redirect()->route('admin.blog.index')
             ->with('success', 'Blog berhasil dihapus');
+
+     ActivityLog::create([
+    'title' => 'Blog diupdate',
+    'description' => $request->title,
+    'type' => 'primary',
+    'user' => auth()->user()->name ?? 'System'
+]);
+
     }
 }
+

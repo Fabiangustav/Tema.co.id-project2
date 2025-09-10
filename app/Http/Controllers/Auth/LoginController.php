@@ -35,15 +35,4 @@ class AuthController extends Controller
             'name' => 'Name atau password salah.',
         ])->onlyInput('name');
     }
-
-    // Logout
-    public function logout(Request $request)
-    {
-        Auth::logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect()->route('admin.login');
-    }
 }

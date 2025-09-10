@@ -6,79 +6,40 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Berita;
 use App\Models\Blog;
-use App\Models\Slider;
 use App\Models\Contact;
+use App\Models\User;
+use App\Models\ActivityLog; // ✅ tambahkan
 use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display the admin dashboard.
-     */
     public function index()
     {
-        // Get cached dashboard data or compute if not cached
-        $dashboardData = Cache::remember('admin.dashboard.data', 300, function () {
+        // Paksa clear cache dulu
+        Cache::forget('admin.dashboard.data');
+
+        // Simpan cache baru selama 1 menit (60 detik)
+        $dashboardData = Cache::remember('admin.dashboard.data', 60, function () {
             return $this->getDashboardData();
         });
 
+        // Kirim ke view
         return view('admin.dashboard.index', $dashboardData);
     }
 
-    /**
-     * Get all dashboard data
-     */
     private function getDashboardData()
     {
         return [
-            // Basic statistics
-            'totalBerita'     => Berita::count(),
-            'totalBlog'       => Blog::count(),
-            'totalSlider'     => Slider::count(),
-            'totalMessages'   => Contact::count(),
+            'publishedBerita'  => Berita::count(),
+            'draftBlog'        => Blog::count(),
+            'newMessages'      => Contact::where('is_read', false)->count(),
 
-            // Content Status
-            'publishedBerita' => Berita::where('status', 'published')->count(),
-            'draftBlog'       => Blog::where('status', 'draft')->count(),
-            'newMessages'     => Contact::where('is_read', false)->count(),
+            // ✅ ambil 5 activity log terbaru
+            'recentActivities' => ActivityLog::latest()->get(),
 
-            // Recent Activities
-            'recentActivities' => $this->getRecentActivities(),
-
-            // Analytics
-            'monthlyStats'    => $this->getMonthlyStats(),
+            'monthlyStats'     => $this->getMonthlyStats(),
         ];
-    }
-
-    private function getRecentActivities($limit = 5)
-    {
-        return collect([
-            [
-                'type' => 'success',
-                'icon' => 'plus-circle',
-                'title' => 'Berita baru ditambahkan',
-                'description' => 'Berita terbaru telah dipublikasi',
-                'created_at' => Carbon::now()->subHours(2)->diffForHumans(),
-                'user' => 'Admin'
-            ],
-            [
-                'type' => 'primary',
-                'icon' => 'pencil',
-                'title' => 'Blog post diupdate',
-                'description' => 'Blog post telah diperbarui',
-                'created_at' => Carbon::now()->subHours(4)->diffForHumans(),
-                'user' => 'Editor'
-            ],
-            [
-                'type' => 'warning',
-                'icon' => 'image',
-                'title' => 'Slider diperbarui',
-                'description' => 'Banner baru ditambahkan',
-                'created_at' => Carbon::now()->subDay()->diffForHumans(),
-                'user' => 'Admin'
-            ]
-        ]);
     }
 
     private function getMonthlyStats()
@@ -102,9 +63,6 @@ class DashboardController extends Controller
         ];
     }
 
-    /**
-     * Refresh dashboard cache
-     */
     public function refreshCache()
     {
         Cache::forget('admin.dashboard.data');

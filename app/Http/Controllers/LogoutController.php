@@ -1,11 +1,19 @@
 <?php
-public function logout(Request $request)
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class AuthController extends Controller
 {
-    Auth::logout();
+    public function logout(Request $request)
+    {
+        Auth::logout();
 
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-    return redirect()->route('admin.login');
+        return redirect()->route('admin.login');
+    }
 }
-?>

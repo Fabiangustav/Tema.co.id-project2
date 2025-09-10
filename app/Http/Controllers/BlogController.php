@@ -1,12 +1,16 @@
-namespace App\Http\Controllers\Admin;
+<?php
 
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
+
+use App\Models\Blog;
 use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {
-    public function create()
+    public function show($slug)
     {
-        return view('admin.blog.create'); // pastikan path ini sesuai lokasi file Blade
+        $blog = Blog::where('slug', $slug)->firstOrFail();
+
+        return view('ShowBlog', compact('blog'));
     }
 }
